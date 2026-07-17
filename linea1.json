@@ -1,0 +1,25 @@
+
+
+
+{
+  
+  "linea": "1",
+  "nombre": "C. C. Los Alfares -Gamonal",  
+  
+  "ida": {
+    "regular": [
+      { "name": "Primera Parada L1", "cod": "101", "coords": [39.9610, -4.8320], "horas": "07:00, 08:00, 09:00" },
+      { "name": "Segunda Parada L1", "cod": "102", "coords": [39.9630, -4.8350], "horas": "07:15, 08:15, 09:15" }
+    ],
+    "sabado": [],
+    "festivo": []
+  },
+  "vuelta": {
+    "regular": [
+      { "name": "Segunda Parada L1", "cod": "102", "coords": [39.9630, -4.8350], "horas": "07:30, 08:30, 09:30" },
+      { "name": "Primera Parada L1", "cod": "101", "coords": [39.9610, -4.8320], "horas": "07:45, 08:45, 09:45" }
+    ],
+    "sabado": [],
+    "festivo": []
+  }
+}

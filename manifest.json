@@ -1,0 +1,21 @@
+{
+  "short_name": "BusTalavera",
+  "name": "Autobuses Urbanos - Línea 4",
+  "icons": [
+    {
+      "src": "iconos/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "iconos/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "display": "standalone",
+  "orientation": "portrait"
+}
