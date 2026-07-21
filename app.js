@@ -367,8 +367,8 @@ document.getElementById('selector-linea').addEventListener('change', (e) => {
 
 function cambiarPestana(activo, inactivoId) {
   const inactivo = document.getElementById(inactivoId);
-  activo.className = "w-1/2 py-3 text-center font-medium border-b-2 border-blue-600 text-blue-600 bg-white focus:outline-none text-xs";
-  inactivo.className = "w-1/2 py-3 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none text-xs";
+  activo.className = "w-1/2 sm:w-24 py-1.5 px-2 text-center font-medium border-b-2 border-blue-600 text-blue-600 bg-white focus:outline-none text-[11px] transition-all";
+  inactivo.className = "w-1/2 sm:w-24 py-1.5 px-2 text-center font-medium text-gray-500 hover:text-gray-700 focus:outline-none text-[11px] transition-all";
 }
 
 function volverACalcular() {
