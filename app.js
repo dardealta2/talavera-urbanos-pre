@@ -1,6 +1,3 @@
-// =========================================================================
-// 1. REGISTRO DEL SERVICE WORKER (Soporte Offline PWA)
-// =========================================================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -9,24 +6,17 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// =========================================================================
-// 2. VARIABLES GLOBALES DE ESTADO
-// =========================================================================
 let sentidoActual = 'ida';
 let tipoDiaActual = 'regular';
-let datosLinea4 = null; // Almacenará los datos que leamos del JSON
+let datosLinea4 = null;
 
 let marcadorUsuario = null;
 let circuloPrecision = null;
 let centradoInicial = false;
 let panelCerranoCerradoManualmente = false;
-let controlRuta = null; // Almacenará la línea que une las paradas
-let lineaActiva = 'linea4'; // Línea por defecto al cargar
+let lineaActiva = 'linea4_4';
+let capaGeometria = null;
 
-
-// =========================================================================
-// 3. INICIALIZACIÓN DEL MAPA
-// =========================================================================
 const map = L.map('map').setView([39.9615, -4.8312], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors'
@@ -48,11 +38,8 @@ const iconoBusVuelta = L.icon({
   popupAnchor: [0, -32]
 });
 
-// =========================================================================
-// 4. FUNCIÓN MATEMÁTICA (DISTANCIA)
-// =========================================================================
 function calcularDistancia(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radio de la Tierra en kilómetros
+  const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   
@@ -64,111 +51,69 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
   return R * c; 
 }
 
-// =========================================================================
-// 5. CARGA ASÍNCRONA DEL ARCHIVO JSON
-// =========================================================================
 async function cargarDatosLinea() {
   try {
-    // Cargamos dinámicamente el JSON según la línea seleccionada (ej: './linea4.json' o './linea1.json')
-    const respuesta = await fetch(`./${lineaActiva}.json`);
-
+    const archivoJson = `${lineaActiva}.json`;
+    const respuesta = await fetch(`./${archivoJson}`);
+    
     if (!respuesta.ok) {
-      throw new Error(`No se pudo cargar el JSON de la ${lineaActiva}: ${respuesta.status}`);
+      throw new Error(`No se pudo cargar el JSON (${archivoJson}): ${respuesta.status}`);
     }
-
-    datosLinea4 = await respuesta.json(); // Reutiliza la misma variable de estado para no cambiar el resto del código
-
+    
+    datosLinea4 = await respuesta.json();
     actualizarVista();
-
+    
   } catch (error) {
     console.error("Error crítico al inicializar los datos de la línea:", error);
-  }
-}
-
-// =========================================================================
-// 6. TRAZADO DE RECORRIDO CONTINUO (100% LOCAL Y FIABLE)
-// =========================================================================
-function trazarRutaPorCalles() {
-  try {
-    // Si ya existe una línea dibujada en el mapa, la eliminamos antes de trazar de nuevo
-    if (controlRuta) {
-      map.removeLayer(controlRuta);
-      controlRuta = null;
+    const listaContainer = document.getElementById('lista-paradas');
+    if (listaContainer) {
+      listaContainer.innerHTML = '<p class="text-red-500 text-center p-4">Error al cargar los datos de esta línea.</p>';
     }
-
-    const paradas = datosLinea4[sentidoActual][tipoDiaActual];
-    if (!paradas || paradas.length < 2) return;
-
-    // Extraemos las coordenadas de las paradas ordenadas
-    const puntosRuta = paradas.map(parada => parada.coords);
-
-    // Dibujamos una línea azul discontinua elegante que unirá las paradas de manera inmediata
-    controlRuta = L.polyline(puntosRuta, {
-      color: '#1d4ed8',       // Azul corporativo
-      weight: 5,             // Grosor
-      opacity: 0.8,          // Opacidad
-      dashArray: '10, 8',    // Efecto de línea discontinua (tipo ruta)
-      lineJoin: 'round'      // Esquinas suavizadas
-    }).addTo(map);
-
-  } catch (error) {
-    console.error("Error al trazar la línea continua:", error);
   }
 }
 
-// =========================================================================
-// 7. ACTUALIZACIÓN DE LA VISTA (Mapa, Listado y Rutas)
-// =========================================================================
 function actualizarVista() {
   if (!datosLinea4) return;
 
-  // 1. Diccionario de colores según la línea seleccionada
   const coloresLineas = {
-    'linea4': 'bg-yellow-300', // Azul oscuro original para la Línea 4
-    'linea1': 'bg-red-400', // Verde esmeralda para la Línea 1 (cámbialo por el que prefieras, ej: bg-red-600)
-    'linea2': 'bg-amber-600'  // Por si en el futuro añades una Línea 2 (Naranja)
+    'linea4': 'bg-yellow-300', 
+    'linea1': 'bg-red-400', 
+    'linea2': 'bg-amber-600'
   };
 
   const nombreFormateado = lineaActiva.toUpperCase().replace('LINEA', 'Línea ');
 
-  // Actualiza el título de la pestaña
   document.title = `${nombreFormateado} - Autobuses Urbanos`;
 
-  // Actualiza el texto del <h1>
   const headerTitulo = document.getElementById('titulo-header');
   if (headerTitulo) {
     headerTitulo.textContent = `${nombreFormateado} Urbanos`;
   }
 
-  // NUEVO: Cambia el color de fondo del contenedor del Header
   const contenedorHeader = document.getElementById('main-header');
   if (contenedorHeader) {
-    // Eliminamos cualquier color previo del listado para que no se pisen entre sí
     Object.values(coloresLineas).forEach(claseColor => {
       contenedorHeader.classList.remove(claseColor);
     });
-    
-    // Aplicamos el color correspondiente a la línea actual (si no existe, usa bg-blue-900 por defecto)
     const colorAsignado = coloresLineas[lineaActiva] || 'bg-blue-900';
     contenedorHeader.classList.add(colorAsignado);
   }
 
-
-
-
   capaMarcadores.clearLayers();
   const listaContainer = document.getElementById('lista-paradas');
+  if (!listaContainer) return;
   listaContainer.innerHTML = '';
+
+  if (!datosLinea4[sentidoActual] || !datosLinea4[sentidoActual][tipoDiaActual]) {
+    listaContainer.innerHTML = '<p class="text-gray-500 text-center p-4">No hay horarios registrados para esta combinación.</p>';
+    return;
+  }
 
   const paradas = datosLinea4[sentidoActual][tipoDiaActual];
   const iconoSeleccionado = (sentidoActual === 'ida') ? iconoBusIda : iconoBusVuelta;
 
-  if (!paradas || paradas.length === 0) {
-    listaContainer.innerHTML = '<p class="text-gray-500 text-center p-4">No hay horarios registrados para esta selección.</p>';
-    return;
-  }
+  const marcadoresArray = [];
 
-  // Dibujamos marcadores y creamos lista lateral
   paradas.forEach((parada, index) => {
     const marcador = L.marker(parada.coords, { icon: iconoSeleccionado })
       .bindPopup(`
@@ -179,18 +124,20 @@ function actualizarVista() {
             <strong>Horarios:</strong><br>${parada.horas || "Sin servicio"}
           </div>
         </div>
-      `)
-      .addTo(capaMarcadores);
+      `);
+
+    marcador.addTo(capaMarcadores);
+    marcadoresArray.push(marcador);
 
     const item = document.createElement('div');
-    item.className = "p-3 bg-gray-50 rounded-lg shadow-sm border border-gray-200 hover:bg-blue-50 transition cursor-pointer mb-2";
+    item.className = "parada-card p-2 bg-gray-50 rounded-lg shadow-sm border border-gray-200 hover:bg-blue-50 transition cursor-pointer mb-1.5";
     item.innerHTML = `
       <div class="flex justify-between items-start">
-        <span class="font-bold text-gray-800 text-sm">${index + 1}. ${parada.name}</span>
-        <span class="bg-gray-200 text-gray-700 text-xs px-1.5 py-0.5 rounded font-mono">#${parada.cod}</span>
+        <span class="font-bold text-gray-800 text-xs">${index + 1}. ${parada.name}</span>
+        <span class="bg-gray-200 text-gray-700 text-[10px] px-1 py-0.2 rounded font-mono">#${parada.cod}</span>
       </div>
-      <p class="text-xs text-blue-700 mt-1.5 font-semibold">Horarios del trayecto:</p>
-      <p class="text-xs text-gray-600 font-mono">${parada.horas || "Sin servicio"}</p>
+      <p class="text-[11px] text-blue-700 mt-1 font-semibold">Horarios:</p>
+      <p class="text-[11px] text-gray-600 font-mono">${parada.horas || "Sin servicio"}</p>
     `;
     
     item.addEventListener('click', () => {
@@ -201,16 +148,48 @@ function actualizarVista() {
     listaContainer.appendChild(item);
   });
 
-  // Pintamos el recorrido de manera inmediata y autónoma
-  trazarRutaPorCalles();
+  cargarGeometriaLinea(paradas);
 }
 
-// =========================================================================
-// 8. GESTIÓN DEL GLOBO DE INFORMACIÓN DE PARADA MÁS CERCANA
-// =========================================================================
+async function cargarGeometriaLinea(paradas) {
+  try {
+    if (capaGeometria) {
+      map.removeLayer(capaGeometria);
+      capaGeometria = null;
+    }
+
+    if (!paradas || paradas.length === 0) return;
+
+    const coordsString = paradas
+      .map(p => `${p.coords[1]},${p.coords[0]}`)
+      .join(';');
+
+    const url = `https://router.project-osrm.org/route/v1/driving/${coordsString}?overview=full&geometries=geojson`;
+    const respuesta = await fetch(url);
+    const data = await respuesta.json();
+
+    if (data.routes && data.routes.length > 0) {
+      const trazadoGeoJSON = data.routes[0].geometry;
+
+      capaGeometria = L.geoJSON(trazadoGeoJSON, {
+        style: {
+          color: '#2563eb',
+          weight: 5,
+          opacity: 0.8
+        }
+      }).addTo(map);
+
+      capaMarcadores.bringToFront();
+    }
+  } catch (error) {
+    console.error("Error al calcular la ruta por calles:", error);
+  }
+}
+
 function mostrarParadaMasCercana(miLat, miLng) {
   if (!datosLinea4 || panelCerranoCerradoManualmente) return;
 
+  if (!datosLinea4[sentidoActual] || !datosLinea4[sentidoActual][tipoDiaActual]) return;
   const paradas = datosLinea4[sentidoActual][tipoDiaActual];
   if (!paradas || paradas.length === 0) return;
 
@@ -251,12 +230,12 @@ function mostrarParadaMasCercana(miLat, miLng) {
       <button id="btn-cerrar-info" class="absolute top-1 right-2 text-gray-400 hover:text-red-500 transition focus:outline-none text-base font-bold p-0.5 leading-none z-10 bg-transparent border-0 cursor-pointer">
         &times;
       </button>
-      <div class="flex items-center gap-2 pr-4 text-left justify-start" style="text-align: left !important;">
+      <div class="flex items-center gap-2 pr-4 text-left justify-start">
         <span class="flex h-2 w-2 relative shrink-0">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
         </span>
-        <p class="text-gray-700 leading-tight m-0" style="text-align: left !important;">
+        <p class="text-gray-700 leading-tight m-0">
           Cercana: <strong class="text-gray-900">${paradaCercana.name}</strong> a <strong class="text-blue-600">${distanciaTexto}</strong>
         </p>
       </div>
@@ -281,31 +260,21 @@ function mostrarParadaMasCercana(miLat, miLng) {
   }
 }
 
-// =========================================================================
-// 9. GEOLOCALIZACIÓN REAL CON PLAN B INTEGRADO
-// =========================================================================
 if ("geolocation" in navigator) {
   navigator.geolocation.watchPosition(
     (position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
       const precision = position.coords.accuracy;
-
       renderizarUbicacionUsuario(lat, lng, precision);
     },
     (error) => {
-      console.warn("Aviso de Geolocalización (Se activa ubicación simulada de pruebas en Talavera): " + error.message);
-      
-      // PLAN B: Ubicación fija en Talavera para pruebas en PC local
+      console.warn("Aviso de Geolocalización: " + error.message);
       if (!centradoInicial) {
         renderizarUbicacionUsuario(39.9600, -4.8250, 30);
       }
     },
-    {
-      enableHighAccuracy: true,
-      timeout: 8000,
-      maximumAge: 0
-    }
+    { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
   );
 }
 
@@ -337,9 +306,6 @@ function renderizarUbicacionUsuario(lat, lng, precision) {
   mostrarParadaMasCercana(lat, lng);
 }
 
-// =========================================================================
-// 10. CONTROLADORES DE EVENTOS (LISTENERS)
-// =========================================================================
 document.getElementById('btn-ida').addEventListener('click', (e) => {
   cambiarPestana(e.target, 'btn-vuelta');
   sentidoActual = 'ida';
@@ -361,8 +327,8 @@ document.getElementById('selector-dia').addEventListener('change', (e) => {
 });
 
 document.getElementById('selector-linea').addEventListener('change', (e) => {
-  lineaActiva = e.target.value; // Guarda si ha seleccionado 'linea4' o 'linea1'
-  cargarDatosLinea();           // Vuelve a hacer el fetch del nuevo JSON y redibuja todo automáticamente
+  lineaActiva = e.target.value;
+  cargarDatosLinea();
 });
 
 function cambiarPestana(activo, inactivoId) {
@@ -379,14 +345,4 @@ function volverACalcular() {
   }
 }
 
-document.getElementById('selector-linea').addEventListener('change', (e) => {
-  lineaActiva = e.target.value; // Guarda si ha seleccionado 'linea4' o 'linea1'
-  cargarDatosLinea();           // Vuelve a hacer el fetch del nuevo JSON y redibuja todo automáticamente
-});
-
-
-
-// =========================================================================
-// 11. DISPARO INICIAL
-// =========================================================================
 cargarDatosLinea();

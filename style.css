@@ -1,0 +1,28 @@
+@media (max-width: 768px) {
+  /* Tarjetas de paradas mucho más pequeñas y compactas */
+  .parada-card {
+    padding: 4px 8px !important;
+    margin-bottom: 3px !important;
+  }
+
+  .parada-card span {
+    font-size: 0.75rem !important;
+  }
+
+  .parada-card p {
+    font-size: 0.7rem !important;
+    line-height: 1.1 !important;
+  }
+
+  /* El mapa gana más altura (60% de la pantalla) */
+  #map {
+    height: 60vh !important;
+    width: 100% !important;
+  }
+
+  /* Reducir tamaño de selectores y botones superiores */
+  select, button {
+    padding: 4px 6px !important;
+    font-size: 0.75rem !important;
+  }
+}
