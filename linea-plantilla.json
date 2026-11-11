@@ -1,0 +1,15 @@
+{
+  "linea": "3",
+  "nombre": "C. C. Los Alfares - Bº Santa María",
+  "circular": false,
+  "destinos": { "ida": "Bº Santa María", "vuelta": "C. C. Los Alfares" },
+  "paradas": {
+    "0001": { "name": "Parada A", "coords": [39.9644, -4.7989] },
+    "0002": { "name": "Parada B", "coords": [39.9650, -4.8100] }
+  },
+  "ida": {
+    "regular": [ { "cod": "0001", "horas": ["07:00", "08:00"] }, { "cod": "0002", "horas": ["07:05", "08:05"] } ],
+    "sabado": [], "festivo": []
+  },
+  "vuelta": { "regular": [], "sabado": [], "festivo": [] }
+}

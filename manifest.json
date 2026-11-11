@@ -1,0 +1,17 @@
+{
+  "name": "Autobuses Urbanos de Talavera",
+  "short_name": "Bus Talavera",
+  "description": "Horarios, paradas y mapa de los autobuses urbanos de Talavera de la Reina",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {"src": "iconos/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "iconos/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "iconos/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

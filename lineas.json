@@ -1,0 +1,8 @@
+[
+  {"id": "linea1", "archivo": "linea1.json", "corta": "1", "nombre": "Línea 1", "color": "#dc2626", "texto": "#ffffff"},
+  {"id": "linea3", "archivo": "linea3.json", "corta": "3", "nombre": "Línea 3", "color": "#f49ca4", "texto": "#1f2937"},
+  {"id": "linea4", "archivo": "linea4.json", "corta": "4", "nombre": "Línea 4", "color": "#facc15", "texto": "#1f2937"},
+  {"id": "linea5", "archivo": "linea5.json", "corta": "5", "nombre": "Línea 5", "color": "#a47414", "texto": "#ffffff"},
+  {"id": "linea6", "archivo": "linea6.json", "corta": "6", "nombre": "Línea 6", "color": "#7cbc24", "texto": "#ffffff"},
+  {"id": "linea9", "archivo": "linea9.json", "corta": "9", "nombre": "Línea 9", "color": "#24346c", "texto": "#ffffff"}
+]

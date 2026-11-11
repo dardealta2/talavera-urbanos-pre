@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Autobuses Urbanos de Talavera de la Reina</title>
+<meta name="description" content="Horarios, paradas y mapa de las líneas de autobús urbano de Talavera de la Reina.">
+<meta name="theme-color" content="#1e3a8a">
+<meta property="og:title" content="Autobuses Urbanos de Talavera de la Reina">
+<meta property="og:description" content="Próximo autobús, horarios y paradas cercanas.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="iconos/icon-192.png">
+<link rel="apple-touch-icon" href="iconos/icon-192.png">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/leaflet/leaflet.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div id="map" role="application" aria-label="Mapa de paradas"></div>
+<main class="panel">
+  <header class="cab" id="cab"><h1 id="titulo">Autobuses Urbanos</h1>
+    <button class="ib" id="btnCerca" aria-label="Paradas cerca de mí" title="Paradas cerca de mí"><img class="ico" src="iconos/parada_cercana.png" alt=""></button>
+    <button class="ib" id="btnBusca" aria-label="Buscar parada" title="Buscar parada"><img class="ico" src="iconos/lupa.png" alt=""></button>
+    <button class="ib" id="btnPanel" aria-label="Mostrar u ocultar horarios" title="Mostrar u ocultar horarios" aria-expanded="false"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button></header>
+  <nav id="lineas" class="lineas" aria-label="Línea"></nav>
+  <div class="ctl">
+    <select id="dia" aria-label="Tipo de día">
+      <option value="regular">Laborables</option>
+      <option value="sabado">Sábados</option>
+      <option value="agosto">Laborables de agosto y Navidad</option>
+      <option value="festivo">Domingos y festivos</option>
+    </select>
+    <div class="sent" id="sent">
+      <button data-s="ida" class="on">Ida →</button>
+      <button data-s="vuelta">← Vuelta a Alfares</button>
+    </div>
+  </div>
+  <section id="lista" class="lista" aria-live="polite"></section>
+  <section id="busq"><div class="bq"><input id="q" type="search" placeholder="Buscar parada o código…" autocomplete="off" aria-label="Buscar parada"><button class="ib" id="cierraB" aria-label="Cerrar búsqueda" title="Cerrar búsqueda">✕</button></div><div id="res" class="lista"></div></section>
+  <section id="ficha"></section>
+  <footer class="aviso">Web no oficial. Horarios orientativos: consulta siempre las fuentes oficiales del servicio. · Fuente: <a href="https://www.urbanostalavera.com">urbanostalavera.com</a> · <a href="privacidad.html">Privacidad</a></footer>
+</main>
+</body>
+</html>

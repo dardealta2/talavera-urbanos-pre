@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "es.tudominio.busTalavera",
+    "sha256_cert_fingerprints": ["PEGA-AQUI-EL-SHA256-DE-TU-CLAVE-DE-FIRMA"]
+  }
+}]

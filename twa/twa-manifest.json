@@ -1,0 +1,20 @@
+{
+  "packageId": "es.tudominio.busTalavera",
+  "host": "TU-DOMINIO.es",
+  "name": "Autobuses Urbanos de Talavera",
+  "launcherName": "Bus Talavera",
+  "display": "standalone",
+  "themeColor": "#1e3a8a",
+  "navigationColor": "#1e3a8a",
+  "backgroundColor": "#1e3a8a",
+  "startUrl": "/",
+  "iconUrl": "https://TU-DOMINIO.es/iconos/icon-512.png",
+  "maskableIconUrl": "https://TU-DOMINIO.es/iconos/icon-maskable-512.png",
+  "webManifestUrl": "https://TU-DOMINIO.es/manifest.json",
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "enableNotifications": false,
+  "signingKey": { "path": "./android.keystore", "alias": "android" },
+  "fallbackType": "customtabs",
+  "minSdkVersion": 21
+}
